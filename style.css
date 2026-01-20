@@ -1,0 +1,23 @@
+        /* --- Identity Badges --- */
+        .identity-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            margin-bottom: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Heatmap Colors --- */
+        .heat-sq {
+            width: 10px;
+            height: 10px;
+            background-color: var(--bg-input);
+            border-radius: 2px;
+        }
+        .heat-l1 { background-color: #0e4429; }
+        .heat-l2 { background-color: #006d32; }
+        .heat-l3 { background-color: #26a641; }
+        .heat-l4 { background-color: #39d353; }

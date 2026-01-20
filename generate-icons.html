@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Icon Generator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 2rem;
+        }
+        h1 { color: #00ff9d; }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .icon-item {
+            background: #2a2a2a;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .icon-item canvas {
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .icon-item p {
+            margin-top: 0.5rem;
+            color: #888;
+        }
+        .icon-item a {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #00ff9d;
+            color: black;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .instructions {
+            background: #2a2a2a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Atomic Habits PWA Icon Generator</h1>
+    
+    <div class="instructions">
+        <p><strong>Instructions:</strong> Click "Download" on each icon to save it. Then place all downloaded icons in the <code>icons/</code> folder.</p>
+    </div>
+    
+    <div class="icon-grid" id="iconGrid"></div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function drawIcon(ctx, size) {
+            const scale = size / 512;
+            
+            // Background gradient
+            const bgGrad = ctx.createLinearGradient(0, 0, size, size);
+            bgGrad.addColorStop(0, '#111111');
+            bgGrad.addColorStop(1, '#000000');
+            
+            // Accent gradient
+            const accentGrad = ctx.createLinearGradient(0, 0, size, size);
+            accentGrad.addColorStop(0, '#00ff9d');
+            accentGrad.addColorStop(1, '#00cc7d');
+            
+            // Draw rounded rectangle background
+            const radius = 96 * scale;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, radius);
+            ctx.fillStyle = bgGrad;
+            ctx.fill();
+            
+            // Draw atomic rings
+            ctx.strokeStyle = '#00ff9d';
+            ctx.lineWidth = 8 * scale;
+            ctx.globalAlpha = 0.3;
+            
+            const cx = size / 2;
+            const cy = size / 2;
+            const rx = 140 * scale;
+            const ry = 50 * scale;
+            
+            // Ring 1 (-30 degrees)
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(-30 * Math.PI / 180);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, rx, ry, 0, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+            
+            // Ring 2 (30 degrees)
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(30 * Math.PI / 180);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, rx, ry, 0, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+            
+            // Ring 3 (90 degrees)
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(90 * Math.PI / 180);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, rx, ry, 0, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+            
+            ctx.globalAlpha = 1;
+            
+            // Center nucleus
+            ctx.beginPath();
+            ctx.arc(cx, cy, 80 * scale, 0, 2 * Math.PI);
+            ctx.fillStyle = accentGrad;
+            ctx.fill();
+            
+            // Checkmark
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 20 * scale;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(210 * scale, 260 * scale);
+            ctx.lineTo(245 * scale, 295 * scale);
+            ctx.lineTo(310 * scale, 220 * scale);
+            ctx.stroke();
+            
+            // Orbiting electrons
+            ctx.fillStyle = accentGrad;
+            
+            ctx.beginPath();
+            ctx.arc(256 * scale, 116 * scale, 16 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(377 * scale, 326 * scale, 16 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(135 * scale, 326 * scale, 16 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        function generateIcons() {
+            const grid = document.getElementById('iconGrid');
+            
+            sizes.forEach(size => {
+                const item = document.createElement('div');
+                item.className = 'icon-item';
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                canvas.style.width = Math.min(size, 150) + 'px';
+                canvas.style.height = Math.min(size, 150) + 'px';
+                
+                const ctx = canvas.getContext('2d');
+                drawIcon(ctx, size);
+                
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = `icon-${size}x${size}.png`;
+                link.textContent = 'Download';
+                
+                const label = document.createElement('p');
+                label.textContent = `${size}x${size}`;
+                
+                item.appendChild(canvas);
+                item.appendChild(label);
+                item.appendChild(link);
+                grid.appendChild(item);
+            });
+        }
+        
+        generateIcons();
+    </script>
+</body>
+</html>
